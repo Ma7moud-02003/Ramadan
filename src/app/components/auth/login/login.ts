@@ -27,6 +27,10 @@ login(event:Event)
 this.auth.login(this.user().email,this.user().password).then((res)=>{
 this.router.navigate(['/card']);
 console.log(res);
+}).catch((err)=>{
+  console.log(err);
+alert('invalid-credential')
+  
 })
 
 }
