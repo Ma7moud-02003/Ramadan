@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@200..1000&display=swap');
+body
+{
+   font-family: "Cairo", sans-serif;
+//     background-color:black;
+// color: white;  
+}
+
+.animate-enter{
+    animation: fade-in 1.5s;
+}
+@keyframes fade-in 
+{
+    from{
+opacity: 0;
+
+    }
+    to
+    {
+opacity: 1;
+    }
+}

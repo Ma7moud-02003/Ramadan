@@ -1,0 +1,113 @@
+<section  animate.enter="animate-enter" class="bg-gray-900 text-white h-auto " style="min-height: 100vh;">
+    @if(step()>0&&step()<4) {<button (click)="step.set(step()-1)" class=""
+        style="position: fixed; top: 60%; left:0.3rem;">
+        <i class="fa-solid  text-3xl fa-circle-arrow-left"></i>
+        </button>
+        }
+        @if(step()==2) {
+            <div style="position: fixed; bottom: 20%; right:2rem;" >
+                <button (click)="setUserPlane()" [disabled]="showLoading()"  type="button" class="flex item-center text-white bg-sky-800 box-border border border-transparent hover:bg-dark-strong focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 
+            rounded-base text-sm px-4 py-2.5 focus:outline-none">
+@if(showLoading())
+{
+                <svg  aria-hidden="true" role="status" class="w-4 h-4 mx-3  text-yellow-800 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+<path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+</svg>
+}
+حفظ الخطه
+        </button>
+
+
+
+            </div>
+            
+       
+        }
+
+        <div class="text-center py-10" >
+            <h1 class="text-2xl">حدد خطو حفظك</h1>
+            <p>اختر الشيخ، السورة، وعدد الآيات اليومية لتبدأ رحلة الحفظ</p>
+        </div>
+        @if(step()==0){
+        <div animate.enter="animate-enter">
+            <h2 class="text-center text-2xl">اختر الشيخ</h2>
+            <div class="grid md:grid-cols-2 gap-6 mt-10 p-10">
+
+                @for(sh of sheikhs(); track sh)
+                {
+                <ul class="text-white">
+                    <li class="bg-gray-800 rounded-lg py-4 hover:bg-gray-700 focus:bg-sky-700 transition">
+                        <input type="radio" id="sheikhs" name="hosting" value="hosting-small" class="hidden peer"
+                            required />
+                        <label (click)="selectShekh(sh)" tabindex="-1" for="sheikhs"
+                            class=" inline-flex items-center justify-between w-full p-5 text-body border-1 border-default  cursor-pointer   ">
+                            <div class="block">
+                                <div class="w-full font-semibold">{{sh.name}}</div>
+                                <div class="w-full text-gray-500 mt-4">{{sh.description}}</div>
+                            </div>
+                            <i class="fa-solid fa-arrow-right"></i>
+
+                        </label>
+                    </li>
+                </ul>
+                }
+
+            </div>
+        </div>
+        }
+
+
+
+        @else if(step()==1){
+        <div animate.enter="animate-enter"> 
+            <h2 class="text-center text-2xl">ابدأ الحفظ بداية من </h2>
+            <div class="grid md:grid-cols-4 gap-6 mt-10 p-10">
+                @for(surah of suar(); track surah)
+                {
+                <ul>
+                    <li tabindex="-1" class=" rounded-lg hover:bg-gray-800 focus:bg-sky-800 transition"
+                        style="border: solid rgba(255, 255, 255, 0.318) 0.1px;">
+                        <input type="radio" id="surah" name="hosting" value="hosting-small" class="hidden peer"
+                            required />
+                        <label (click)="selectSurah(surah)" for="surah"
+                            class=" inline-flex items-center justify-between w-full p-5 text-body border-1 border-default  cursor-pointer   ">
+                            <div class="block">
+                                <div class="w-full font-semibold">{{surah.name}}</div>
+                            </div>
+                            {{surah.ayahs}}
+                        </label>
+                    </li>
+                </ul>
+                }
+
+            </div>
+        </div>
+        }
+        @else {
+        <div animate.enter="animate-enter">
+            <h2 class="text-center text-2xl">عدد الايات يوميا</h2>
+            <div class="grid md:grid-cols-2 gap-6 mt-10 p-10">
+                @for(dailyAyat of dailyAyas();track dailyAyat)
+                {
+                <ul>
+                    <li tabindex="-1" [ngClass]="{'bg-sky-800':plane().dailyAyahs==dailyAyat}" class=" rounded-lg hover:bg-gray-800 focus:bg-sky-800 transition"
+                        style="border: solid rgba(255, 255, 255, 0.462) 0.1px;">
+                        <input type="radio" id="daily" name="hosting" value="hosting-small" class="hidden peer"
+                            required />
+                        <label (click)="selectDailyAyahs(dailyAyat)" for="daily"
+                            class=" inline-flex items-center justify-between w-full p-5 text-body border-1 border-default  cursor-pointer   ">
+                            <div class="block">
+                                <div class="w-full font-semibold">{{dailyAyat}}</div>
+                            </div>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </label>
+                    </li>
+                </ul>
+                }
+            </div>
+            <p class="text-center" style="transform: translateY(10rem);">ان الله لا يضيع اجر من احسن عملا</p>
+        </div>
+        }
+
+</section>

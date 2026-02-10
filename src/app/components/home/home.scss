@@ -1,0 +1,53 @@
+.ayah-marker {
+  position: relative;
+  display: inline-block;
+  font-size: 2.5rem;
+  color: goldenrod;
+  padding: 0;
+  margin: 0 6px;
+
+}
+
+.ayah-marker .num {
+  position: absolute;
+  top:26%;
+  left: 26%;
+  font-size: 1.2rem;
+
+
+}
+.icon
+{
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid 2px rgba(0, 0, 0, 0.333);
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 0 1rem;
+
+    transition: all 0.3s ease-in-out;
+}
+.icon i 
+{
+    margin: 0;
+}
+.aya:hover
+{
+  color: rgb(4, 180, 250) !important;
+}
+
+@media (max-width: 768px) {
+  .ayah-marker .num {
+    top: 26%;
+    left: 33%;
+    font-size: 1rem;
+  }
+  .ayah-marker
+    {
+        font-size: 2rem;
+    }
+
+}

@@ -1,0 +1,82 @@
+<div class="px-4 flex justify-center items-center min-h-screen bg-white text-slate-900">
+  <section
+    class="w-full lg:w-2/3 flex flex-col md:flex-row justify-center items-center p-6 md:p-10 shadow-lg rounded-lg"
+  >
+    <!-- Image -->
+    <div class="hidden md:flex md:w-1/2 justify-center">
+     <div>
+       <img
+        src="/17552.jpg"
+        alt=""
+        class="w-3/4 rounded-full"
+      />
+      <p class="text-amber-800 text-lg text-center w-3/4 mx-0 text-center mt-4 leading-relaxed opacity-80">
+        وَإِنَّهُ لَقُرْآنٌ كَرِيمٌ، فِي كِتَابٍ مَّكْنُونٍ
+ </p>
+
+     </div>
+      
+    </div>
+
+    <!-- Form -->
+    <div class="w-full md:w-1/2 px-2 md:px-4 register">
+      <div class="py-5 text-center">
+        <p class="">تسجيل دخول</p>
+        <h2 class="font-bold  text-2xl">حسابك</h2>
+      </div>
+
+      <div class="form">
+        <form class="block" #form="ngForm" (submit)="login($event)">
+          <div class="py-4">
+            <label>البريد الالكتروني</label>
+            <input [(ngModel)]="user().email" #email="ngModel" type="email" name="email" required email minlength="10"  />
+            <div class="text-red-500 p-3">
+              @if(email.hasError('required') && email.touched){
+              <p >● البريد الالكتروني مطلوب</p>
+              }
+                  @if(email.hasError('email') && email.touched){
+              <p >● البريد الالكتروني غير صالح</p>
+              }
+            </div>
+          </div>
+
+          <div class="py-4">
+            <label>كلمة السر</label>
+            <input [(ngModel)]="user().password" #password="ngModel" name="password" placeholder="************" type="password" required minlength="6" maxlength="100"   pattern="^(?=.*[A-Z])(?=.*\d).+$" />
+         <div class="text-red-500 p-3">
+             @if(password.hasError('required') && password.touched){
+              <p >● كلمة السر   مطلوب </p>
+              }
+                  @if(password.hasError('minlength') && password.touched){
+              <p >●  اقل شيئ 6 حروف</p>
+              }
+                   @if(password.errors?.['pattern'] && password.touched){
+              <p >● كلمة السر يجب ان تحتوي علي حرف كبير ورقم عبي الاقل</p>
+              }
+         </div>
+          </div>
+
+          <div
+            class="flex flex-col sm:flex-row sm:justify-between sm:items-center  py-4 gap-4"
+          >
+            <button [disabled]="form.invalid" type="submit"
+              class="bg-gray-200 text-blue-500 py-3 px-6 rounded-md font-semibold hover:bg-gray-100 hover:text-sky-500"
+               >
+              Login
+            </button>
+            <a href="#" class="text-sm hover:underline">
+              نسيت كلمة السر ؟
+            </a>
+          </div>
+
+          <p class=" text-center">
+            ليس لديك حساب ؟
+            <a routerLink="/" class="text-amber-400 font-semibold">
+              تسجيل
+            </a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
