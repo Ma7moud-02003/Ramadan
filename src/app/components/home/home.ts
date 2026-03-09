@@ -1,4 +1,3 @@
-
 import { surah } from './../../models/surah';
 import { sheikhs, surahs } from './../../constants/quran.constants';
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
@@ -13,160 +12,168 @@ import { apis } from '../../environments/apis.env';
 @Component({
   selector: 'app-home',
   imports: [CommonModule],
-  templateUrl: './home.html',
-  styleUrl: './home.scss',
+  templateUrl:'./home.html',
+  styleUrls: ['./home.scss'], // صححت هنا
 })
 export class Home implements OnInit, OnDestroy {
 
+  // Signals
   hideAyat = signal<boolean>(false);
   darkMode = signal<boolean>(false);
   alertMessage = signal<string>('');
   showAlert = signal<boolean>(false);
   showTafseer = signal<boolean>(false);
-  hiddenAyat() {
-    this.hideAyat.set(!this.hideAyat());
-  }
-  getShowAlert(messsage: string) {
-    this.alertMessage.set(messsage);
-    this.showAlert.set(!this.showAlert());
-  }
 
   private subs = new Subscription();
   home = inject(HomeService);
-  userData = signal<UserData>({} as UserData);
   auth = inject(Authenication);
+
+  userData = signal<UserData>({} as UserData);
   surah = signal<surah>({} as surah);
   ayat = signal<Ayah[]>([]);
   dailyAyat = signal<Ayah[]>([]);
   dailyTafseer = signal<any[]>([]);
   tafseerofAyahs = signal<any[]>([]);
+
+  // Audio
+  currentAudio: HTMLAudioElement | null = null;
+  audios = signal<string[]>([]);
+  play = signal<boolean>(false);
+  currentReadingAyahIndex = signal<number>(-1);
+  currentIndex = signal<number>(0);
+
+  // State
+  state = signal({
+    inPrevious: false,
+    inCurrent: false,
+  });
+
+  // Helpers
+  ayaIndex = signal<number>(-1);
+
   ngOnInit(): void {
     this.getUserData();
   }
 
-  getUserData() {
-    this.subs.add(this.home.getUserData().subscribe({
-      next: (data) => {
-        this.userData.set(data);
-        const surah = localStorage.getItem('currentSurah');
-        const tafseer = localStorage.getItem('tafseer');
-        if (surah && tafseer) {
-          this.surah.set(JSON.parse(surah));
-          this.ayat.set(this.surah().ayahs);
-          this.tafseerofAyahs.set(JSON.parse(tafseer))
-          this.getDailyAyat();
-          this.getDailyTafseer();
-        }
-        else
-          this.getCurrentSurah(this.userData().plane.surahNumber)
-        this.getTafseerOfSurah(this.userData().plane.surahNumber);
-
-      }
-    }));
-
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+    if (this.currentAudio) this.currentAudio.pause();
   }
 
+  // Toggle hide/show ayat
+  hiddenAyat() {
+    this.hideAyat.set(!this.hideAyat());
+  }
+
+  getShowAlert(message: string) {
+    this.alertMessage.set(message);
+    this.showAlert.set(!this.showAlert());
+    setTimeout(() => this.showAlert.set(false), 6000);
+  }
+
+  // Fetch user data
+  getUserData() {
+    this.subs.add(
+      this.home.getUserData().subscribe({
+        next: (data) => {
+          this.userData.set(data);
+          const surahData = localStorage.getItem('currentSurah');
+          const tafseerData = localStorage.getItem('tafseer');
+
+          if (surahData && tafseerData) {
+            this.surah.set(JSON.parse(surahData));
+            this.ayat.set(this.surah().ayahs);
+            this.tafseerofAyahs.set(JSON.parse(tafseerData));
+            this.getDailyAyat();
+            this.getDailyTafseer();
+          } else {
+            this.getCurrentSurah(this.userData().plane.surahNumber);
+            this.getTafseerOfSurah(this.userData().plane.surahNumber);
+          }
+        },
+      })
+    );
+  }
 
   getCurrentSurah(cSurah: number) {
     this.subs.add(
       this.home.getCurrentSurah(cSurah).subscribe((res) => {
         this.surah.set(res.data);
-        this.ayat.set(this.surah().ayahs)
+        this.ayat.set(this.surah().ayahs);
         localStorage.setItem('currentSurah', JSON.stringify(res.data));
         this.getDailyAyat();
-      }))
+      })
+    );
   }
 
   getTafseerOfSurah(surahNum: number) {
-
-    console.log(surahNum);
     this.subs.add(
       this.home.getSurahTafseer(surahNum).subscribe((res) => {
         localStorage.setItem('tafseer', JSON.stringify(res.data.ayahs));
         this.tafseerofAyahs.set(res.data.ayahs);
         this.getDailyTafseer();
       })
-    )
+    );
   }
 
   getDailyTafseer() {
-    const dailyAyahs: number = this.userData().plane.dailyAyahs;
-    const start: number = this.userData().plane.currentAyah - 1;
-    const end: number = start + dailyAyahs;
+    const { currentAyah, dailyAyahs } = this.UserData;
     const ayahs = this.tafseerofAyahs();
-    this.dailyTafseer.set(ayahs.slice(start, end));
-    console.log(this.dailyAyat());
+    this.dailyTafseer.set(ayahs.slice(currentAyah - 1, currentAyah - 1 + dailyAyahs));
   }
 
   getDailyAyat() {
-    const dailyAyahs: number = this.userData().plane.dailyAyahs;
-    const start: number = this.userData().plane.currentAyah - 1;
-    const end: number = start + dailyAyahs;
-    this.dailyAyat.set(this.ayat().slice(start, end));
-    this.state.update((state) => ({ ...state, inCurrent: true, inPervious: false }));
+    const { currentAyah, dailyAyahs } = this.UserData;
+    this.dailyAyat.set(this.ayat().slice(currentAyah - 1, currentAyah - 1 + dailyAyahs));
+    this.state.update((state) => ({ ...state, inCurrent: true, inPrevious: false }));
     this.collectAudios();
   }
 
-
   completed() {
-    if (this.currentAudio)
-      this.stopPlaying();
+    if (this.currentAudio) this.stopPlaying();
+
     const plane = this.userData().plane;
-    const currentAyah = this.userData().plane.currentAyah;
-    const dailyayat = this.userData().plane.dailyAyahs;
-    const surah = JSON.parse(localStorage.getItem('currentSurah') || '{}');
-    const ayat = surah.ayahs;
-    const nextIndex = currentAyah + dailyayat - 1;
+    const { currentAyah, dailyAyahs } = this.UserData;
+    const surahData = JSON.parse(localStorage.getItem('currentSurah') || '{}');
+    const ayat = surahData.ayahs;
+    const nextIndex = currentAyah + dailyAyahs - 1;
+
     if (nextIndex >= ayat.length) {
       plane.currentAyah = 1;
       plane.surahNumber += 1;
-      if (plane.surahNumber > 114)
-        plane.surahNumber = 1;
+      if (plane.surahNumber > 114) plane.surahNumber = 1;
       this.home.updatePlaneData(plane);
       this.getCurrentSurah(plane.surahNumber);
-      this.getShowAlert('تهانينا 🎉 لقد أكملت حفظ سورة كاملة! الحفظ نور للقلب ورفعة للمرء عند الله، فاحرص على الاستمرار 💫📖')
-    }
-    else {
-      this.getShowAlert('مبروك! 🎉 أتممت حفظ حصتك اليومية. أحب الأعمال إلى الله ما دام مستمرًا عليها ✨📖')
-      const newCurrentAyah = currentAyah + dailyayat;
-      this.dailyAyat.set(ayat.slice(newCurrentAyah - 1, newCurrentAyah - 1 + dailyayat));
-      this.state.update((state) => ({ ...state, inCurrent: true, inPervious: false }));
+      this.getShowAlert(
+        'تهانينا 🎉 لقد أكملت حفظ سورة كاملة! الحفظ نور للقلب ورفعة للمرء عند الله، فاحرص على الاستمرار 💫📖'
+      );
+    } else {
+      this.getShowAlert(
+        'مبروك! 🎉 أتممت حفظ حصتك اليومية. أحب الأعمال إلى الله ما دام مستمرًا عليها ✨📖'
+      );
+      const newCurrentAyah = currentAyah + dailyAyahs;
+      this.dailyAyat.set(ayat.slice(newCurrentAyah - 1, newCurrentAyah - 1 + dailyAyahs));
+      this.state.update((state) => ({ ...state, inCurrent: true, inPrevious: false }));
       this.collectAudios();
       this.play.set(false);
       this.stopPlaying();
-      //update in firestore
       plane.currentAyah = newCurrentAyah;
       this.home.updatePlaneData(plane);
     }
-    setTimeout(() => {
-      this.showAlert.set(false)
-    }, 6000)
   }
 
-  // audio section
-  currentAudio: HTMLAudioElement | null = null;
-  audios = signal<string[]>([]);
-
+  // Audio functions
   collectAudios() {
     this.audios.set([]);
     const ayahs = this.dailyAyat();
-    ayahs.forEach(ayah => {
-      const sheikh = sheikhs.find(s => s.audioEdition == this.userData().plane.sheikhId);
-
+    ayahs.forEach((ayah) => {
+      const sheikh = sheikhs.find((s) => s.audioEdition == this.userData().plane.sheikhId);
       const audioUrl = `${apis.audioApi}/${sheikh?.qulity}/${this.userData().plane.sheikhId}/${ayah.number}.mp3`;
       this.audios.update((audios) => [...audios, audioUrl]);
     });
-
   }
 
-
-
-  play = signal<boolean>(false);
-  currentReadingAyahIndex = signal<number>(-1);
-  currentIndex = signal<number>(0);
-
   playAllAyahs() {
-
     const audios = this.audios();
     this.currentReadingAyahIndex.set(this.currentIndex());
     if (this.currentIndex() >= audios.length) {
@@ -183,54 +190,18 @@ export class Home implements OnInit, OnDestroy {
       this.playAllAyahs();
     });
     this.currentAudio.onended = () => {
-      this.play.set(true);
       this.currentIndex.update((index) => index + 1);
       this.playAllAyahs();
     };
-
-
   }
-
-
-  stopPlaying() {
-    if (this.currentAudio) {
-      this.currentReadingAyahIndex.set(-1);
-      this.currentAudio.pause();
-      this.currentAudio.currentTime = 0;
-      this.play.set(false);
-
-    }
-  }
-  state = signal({
-    inPervious: false,
-    inCurrent: false,
-  })
-  grtPerviousDay() {
-    if (this.currentAudio)
-      this.stopPlaying();
-    const previousAya = this.UserData.currentAyah - this.UserData.dailyayat;
-    if (previousAya < 1) {
-      alert('لا يوجد آيات سابقة');
-      return;
-    }
-    else {
-      const newDailyAyat = this.ayat().slice(previousAya - 1, previousAya - 1 + this.UserData.dailyayat);
-      this.dailyAyat.set(newDailyAyat);
-      this.collectAudios();
-      this.state.update((state) => ({ ...state, inCurrent: false, inPervious: false }));
-
-    }
-  }
-
 
   playSingleAyah(ayahNumber: number, i: number) {
-    const sheikh = sheikhs.find(s => s.audioEdition == this.userData().plane.sheikhId);
+    const sheikh = sheikhs.find((s) => s.audioEdition == this.userData().plane.sheikhId);
     const audioUrl = `${apis.audioApi}/${sheikh?.qulity}/${this.userData().plane.sheikhId}/${ayahNumber}.mp3`;
-    if (this.currentAudio) {
-      this.stopPlaying()
-    }
+    if (this.currentAudio) this.stopPlaying();
     this.playAudio(audioUrl, i);
   }
+
   playAudio(audioUrl: string, i: number) {
     this.currentReadingAyahIndex.set(i);
     this.currentAudio = new Audio(audioUrl);
@@ -239,49 +210,36 @@ export class Home implements OnInit, OnDestroy {
     });
   }
 
+  stopPlaying() {
+    if (this.currentAudio) {
+      this.currentReadingAyahIndex.set(-1);
+      this.currentAudio.pause();
+      this.currentAudio.currentTime = 0;
+      this.play.set(false);
+    }
+  }
 
-
-
-  getThePrvious() {
-    if (this.currentAudio)
-      this.stopPlaying();
-    const currentAya = this.UserData.currentAyah - 1;
-    if (currentAya <= this.UserData.dailyayat) {
+  getPreviousDay() {
+    if (this.currentAudio) this.stopPlaying();
+    const previousAya = this.UserData.currentAyah - this.UserData.dailyAyahs;
+    if (previousAya < 1) {
       alert('لا يوجد آيات سابقة');
       return;
     }
-    else {
-      const newDailyAyat = this.ayat().slice(0, currentAya);
-      const newCurrentTaseer = this.tafseerofAyahs().slice(0, currentAya);
-      this.dailyTafseer.set(newCurrentTaseer);
-      this.dailyAyat.set(newDailyAyat);
-
-      this.state.update((state) => ({ ...state, inPervious: true, inCurrent: false }));
-      this.collectAudios();
-    }
+    const newDailyAyat = this.ayat().slice(previousAya - 1, previousAya - 1 + this.UserData.dailyAyahs);
+    this.dailyAyat.set(newDailyAyat);
+    this.state.update((state) => ({ ...state, inCurrent: false, inPrevious: false }));
+    this.collectAudios();
   }
+
   get UserData() {
     const currentAyah = this.userData().plane.currentAyah;
-    const dailyayat = this.userData().plane.dailyAyahs;
-    return { currentAyah, dailyayat };
+    const dailyAyahs = this.userData().plane.dailyAyahs;
+    return { currentAyah, dailyAyahs };
   }
-  ayaIndex = signal<number>(-1);
 
   logout() {
-    if (this.currentAudio)
-      this.stopPlaying();
-    this.auth.logOut();;
-  }
-
-
-
-
-  ngOnDestroy(): void {
-    this.subs.unsubscribe();
-    if (this.currentAudio) {
-      this.currentAudio.pause();
-
-    }
+    if (this.currentAudio) this.stopPlaying();
+    this.auth.logOut();
   }
 }
-

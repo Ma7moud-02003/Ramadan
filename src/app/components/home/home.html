@@ -75,7 +75,7 @@
                             </div>
                             }
                             <div>
-                                <div (click)="grtPerviousDay()" tabindex="-1"
+                                <div (click)="getPreviousDay()" tabindex="-1"
                                     class="icon focus:bg-sky-800 cursor-pointer transition hover:scale-105 duration-200 focous:scale-105">
                                     <i tabindex="-1" class="fa-solid fa-chevron-left mx-2 "></i>
                                 </div>
@@ -101,10 +101,10 @@
                                 (click)="getDailyAyat()"> الحاضر
                             </button>
 
-                            <button [ngClass]="{'bg-red-700 text-white':state().inPervious}"
-                                [disabled]="state().inPervious"
+                            <button [ngClass]="{'bg-red-700 text-white':state().inPrevious}"
+                                [disabled]="state().inPrevious"
                                 class=" md:w-auto    my-3 bg-transparent border border-red-700 py-3  px-3   rounded-md md:hover:bg-red-700 transition duration-200"
-                                (click)="getThePrvious()">الماضي
+                                (click)="getPreviousDay()">اليوم السايق
                             </button>
                         </div>
 
@@ -143,7 +143,7 @@
                     </div>
                     }
                     <div>
-                        <div (click)="grtPerviousDay()" tabindex="-1"
+                        <div (click)="getPreviousDay()" tabindex="-1"
                             class="icon focus:bg-sky-800 cursor-pointer transition hover:scale-105 duration-200 focous:scale-105">
                             <i tabindex="-1" class="fa-solid fa-chevron-left mx-2 "></i>
                         </div>
@@ -171,9 +171,9 @@
                         <i class="fa-solid fa-pen mx-1"></i>
                     </button>
 
-                    <button [disabled]="state().inPervious"
+                    <button [disabled]="state().inPrevious"
                         class=" my-3    bg-transparent border border-red-800 py-3  px-10   rounded-md hover:bg-red-700 transition duration-200"
-                        (click)="getThePrvious()">الماضي
+                        (click)="getPreviousDay()">اليوم السابق
                         <i class="fa-solid fa-arrow-left mx-1"></i>
                     </button>
                 </div>
