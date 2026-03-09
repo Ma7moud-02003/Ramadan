@@ -12,58 +12,55 @@ import { Plane } from '../../services/plane';
   templateUrl: './card.html',
   styleUrl: './card.scss',
 })
-export class Card implements OnDestroy,OnInit{
-ngOnInit(): void {
-  this.getAyahForReading();
-}
+export class Card implements OnDestroy, OnInit {
+  ngOnInit(): void {
+    this.getAyahForReading();
+  }
 
 
-private subs=new Subscription();
+  private subs = new Subscription();
   //injection auth service
-auth=inject(Authenication);
+  auth = inject(Authenication);
 
- //injection card service
-_card=inject(Crad)
+  //injection card service
+  _card = inject(Crad)
 
- //injection plnve service
-_plane=inject(Plane)
+  //injection plnve service
+  _plane = inject(Plane)
 
- //injection rout service
-rout=inject(Router)
-
-
-
-
-ayah=signal<any>({});
+  //injection rout service
+  rout = inject(Router)
 
 
 
-getAyahForReading()
-{
-this.subs.add(
-  this._card.getAyah().subscribe({
-    next:(res)=>{
-      console.log(res);
-      this.ayah.set(res);
-      
-    }
-  })
-)
-}
 
-routTo()
-{
-this.subs.add(this._plane.isUserHasPlane().subscribe((res:any)=>{
-  if(res.plane)
-  {
-    this.rout.navigate(['/home']);
-  }else
-  this.rout.navigate(['/plane']);
-})
-)
-}
+  ayah = signal<any>({});
 
-ngOnDestroy(): void {
-  this.subs.unsubscribe();
-}
+
+
+  getAyahForReading() {
+    this.subs.add(
+      this._card.getAyah().subscribe({
+        next: (res) => {
+          console.log(res);
+          this.ayah.set(res);
+
+        }
+      })
+    )
+  }
+
+  routTo() {
+    this.subs.add(this._plane.isUserHasPlane().subscribe((res: any) => {
+      if (res.plane) {
+        this.rout.navigate(['/home']);
+      } else
+        this.rout.navigate(['/plane']);
+    })
+    )
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
 }

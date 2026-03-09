@@ -105,7 +105,6 @@ export class Home implements OnInit, OnDestroy {
     this.dailyAyat.set(this.ayat().slice(start, end));
     this.state.update((state) => ({ ...state, inCurrent: true, inPervious: false }));
     this.collectAudios();
-
   }
 
 
@@ -129,7 +128,6 @@ export class Home implements OnInit, OnDestroy {
     }
     else {
       this.getShowAlert('مبروك! 🎉 أتممت حفظ حصتك اليومية. أحب الأعمال إلى الله ما دام مستمرًا عليها ✨📖')
-
       const newCurrentAyah = currentAyah + dailyayat;
       this.dailyAyat.set(ayat.slice(newCurrentAyah - 1, newCurrentAyah - 1 + dailyayat));
       this.state.update((state) => ({ ...state, inCurrent: true, inPervious: false }));

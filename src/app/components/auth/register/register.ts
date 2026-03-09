@@ -13,40 +13,36 @@ import { Router, RouterLink } from "@angular/router";
   styleUrl: './register.scss',
 })
 export class Register {
-  constructor(){
-   
+  constructor() {
+
   }
-auth=inject(Authenication);
-router=inject(Router);
-registerForm=signal<RegisterInterface>({
-  userName:'',
-  email:'',
-  password:''
-})
+  auth = inject(Authenication);
+  router = inject(Router);
+  registerForm = signal<RegisterInterface>({
+    userName: '',
+    email: '',
+    password: ''
+  })
 
-async sigUp(event:Event)
-{
-  event.preventDefault();
-  console.log(this.registerForm());
- const user=await this.auth.register(this.registerForm().email,this.registerForm().password);
- console.log(user.user.uid);
- 
-this.setUserData(user.user.uid);
-}
+  async sigUp(event: Event) {
+    event.preventDefault();
+    console.log(this.registerForm());
+    const user = await this.auth.register(this.registerForm().email, this.registerForm().password);
+    console.log(user.user.uid);
 
-async setUserData(uid:string)
-{
-try
-{
-  console.log(uid);
-await this.auth.storeUserAfterRegister(this.registerForm(),uid);
-this.router.navigate(['/card']);
-}
-catch(err)
-{
-console.log(err);
+    this.setUserData(user.user.uid);
+  }
 
-}
-}
+  async setUserData(uid: string) {
+    try {
+      console.log(uid);
+      await this.auth.storeUserAfterRegister(this.registerForm(), uid);
+      this.router.navigate(['/card']);
+    }
+    catch (err) {
+      console.log(err);
+
+    }
+  }
 
 }

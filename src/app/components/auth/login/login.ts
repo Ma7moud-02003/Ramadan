@@ -8,30 +8,29 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink,CommonModule,FormsModule],
+  imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
-auth=inject(Authenication);
-router=inject(Router);
-user=signal<LoginInterface>({
-  email:'',
-  password:''
-})
+  auth = inject(Authenication);
+  router = inject(Router);
+  user = signal<LoginInterface>({
+    email: '',
+    password: ''
+  })
 
-login(event:Event)
-{
-  console.log(this.user());
-  event.preventDefault();
-this.auth.login(this.user().email,this.user().password).then((res)=>{
-this.router.navigate(['/card']);
-console.log(res);
-}).catch((err)=>{
-  console.log(err);
-alert('invalid-credential')
-  
-})
+  login(event: Event) {
+    console.log(this.user());
+    event.preventDefault();
+    this.auth.login(this.user().email, this.user().password).then((res) => {
+      this.router.navigate(['/card']);
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+      alert('invalid-credential')
 
-}
+    })
+
+  }
 }
