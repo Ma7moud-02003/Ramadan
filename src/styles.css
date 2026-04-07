@@ -1,33 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@200..1000&display=swap');
-
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Cairo:wght@200..1000&display=swap");
 body {
-    font-family: "Cairo", sans-serif;
-    //     background-color:black;
-    // color: white;  
+  font-family: "Cairo", sans-serif;
 }
 
 .animate-enter {
-    animation: fade-in 1.5s;
+  animation: fade-in 1.5s;
 }
 
 @keyframes fade-in {
-    from {
-        opacity: 0;
-
-    }
-
-    to {
-        opacity: 1;
-    }
-}/* تخصيص السكرول بار ليناسب التصميم */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+} /* تخصيص السكرول بار ليناسب التصميم */
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 
 /* تأثير التعتيم (Blur) للآيات عند الحفظ */
 .blur-md {
@@ -42,8 +38,8 @@ body {
 
 /* تصميم أيقونة ترقيم الآيات */
 .ayah-marker {
-  font-family: 'Amiri', serif;
+  font-family: "Amiri", serif;
   position: relative;
   display: inline-block;
   margin-right: 10px;
-}
+}/*# sourceMappingURL=styles.css.map */

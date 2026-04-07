@@ -1,92 +1,100 @@
-<div class="px-4 flex justify-center items-center min-h-screen  bg-white text-slate-900">
-  <section
-    class="w-full lg:w-2/3 flex flex-col md:flex-row justify-center items-center p-6 md:p-10 shadow-lg rounded-lg">
-    <!-- Image -->
-    <div class="hidden md:flex md:w-1/2 justify-center">
-      <div>
-        <img src="/17552.jpg" alt="" class="w-3/4 rounded-full" />
-        <p class="text-amber-800 text-lg text-center w-3/4 mx-0 text-center mt-4 leading-relaxed opacity-80">
-          وَإِنَّهُ لَقُرْآنٌ كَرِيمٌ، فِي كِتَابٍ مَّكْنُونٍ
-        </p>
+<div class="min-h-screen bg-[#FDFCF8] flex items-center justify-center p-4 sm:p-8  relative overflow-hidden">
+  
+  <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-100 rounded-full blur-[120px] opacity-60"></div>
+  <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-amber-100 rounded-full blur-[120px] opacity-60"></div>
 
+  <section class="relative w-full lg:w-4/5 xl:w-2/3 bg-white flex flex-col md:flex-row shadow-2xl rounded-3xl overflow-hidden border border-emerald-50 animate-in fade-in zoom-in duration-700">
+    
+    <div class="hidden md:flex md:w-5/12 bg-emerald-900 relative items-center justify-center p-12 text-center">
+      <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]"></div>
+      
+      <div class="relative z-10 space-y-6 transform transition-transform hover:scale-105 duration-500">
+        <div class="relative inline-block">
+          <img src="/17552.jpg" alt="Quran logo" class="w-48 h-48 rounded-full border-4 border-amber-400 shadow-2xl object-cover" />
+          <div class="absolute inset-0 rounded-full ring-8 ring-amber-400/20 animate-pulse"></div>
+        </div>
+        <div class="space-y-2">
+          <p class="text-amber-200 text-2xl font-['Amiri'] leading-relaxed">
+            وَإِنَّهُ لَقُرْآنٌ كَرِيمٌ
+          </p>
+          <p class="text-emerald-200/80 text-lg font-['Amiri']">
+            فِي كِتَابٍ مَّكْنُونٍ
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- Form -->
-    <div class=" w-full md:w-1/2 px-2 md:px-4 register">
-      <div class="py-5 text-center">
-        <p class="">تسجيل حساب جديد</p>
-        <h2 class="font-bold  text-2xl">حسابك</h2>
+    <div class="w-full md:w-7/12 p-8 md:p-12 lg:p-16">
+      <div class="mb-8 text-center md:text-right">
+        <p class="text-emerald-600 font-medium tracking-wide mb-1">انضم إلينا اليوم</p>
+        <h2 class="text-3xl font-bold text-slate-800">إنشاء <span class="text-emerald-700">حساب جديد</span></h2>
+        <div class="h-1 w-12 bg-amber-400 mt-3 mx-auto md:mr-0 md:ml-auto rounded-full"></div>
       </div>
 
-      <div class="form">
-        <form #form="ngForm" (submit)="sigUp($event)" class="block">
-          <div class="py-4">
-            <label>الاسم</label>
-            <input [(ngModel)]="registerForm().userName" #userName="ngModel" name="userName" type="text" required
-              minlength="4" pattern="^[A-Za-z\u0600-\u06FF ]+$" />
-            <div class="text-red-500 p-3">
-              @if(userName.hasError('required') && userName.touched){
-              <p>● الاسم مطلوب</p>
-              }
-              @if(userName.hasError('minlength') && userName.touched){
-              <p>● اقل شئ 4 حروف</p>
-              }
-              @if(userName.hasError('pattern') && userName.touched){
-              <p>●الاسم يجب أن يحتوي على حروف عربية أو إنجليزية فقط</p>
-              }
-            </div>
+      <form #form="ngForm" (submit)="sigUp($event)" class="space-y-5">
+        
+        <div class="space-y-1.5">
+          <label class="block text-slate-700 font-semibold pr-1">الاسم الكامل</label>
+          <input [(ngModel)]="registerForm().userName" #userName="ngModel" name="userName" type="text" required
+            minlength="4" pattern="^[A-Za-z\u0600-\u06FF ]+$"
+            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-all"
+            placeholder="أدخل اسمك الثلاثي" />
+          
+          <div class="text-red-500 text-xs mt-1 transition-all">
+            @if(userName.hasError('required') && userName.touched){ <p class="flex items-center gap-1"><span>●</span> الاسم مطلوب</p> }
+            @if(userName.hasError('minlength') && userName.touched){ <p class="flex items-center gap-1"><span>●</span> اقل شئ 4 حروف</p> }
+            @if(userName.hasError('pattern') && userName.touched){ <p class="flex items-center gap-1"><span>●</span> حروف عربية أو إنجليزية فقط</p> }
           </div>
+        </div>
 
-          <div class="py-4">
-            <label>البريد الالكتروني</label>
-            <input [(ngModel)]="registerForm().email" #email="ngModel" name="email" required email type="email" />
-            <div class="text-red-500 p-3">
-              @if(email.hasError('required') && email.touched){
-              <p>● البريد الالكتروني مطلوب</p>
-              }
-              @if(email.hasError('email') && email.touched){
-              <p>● البريد الالكتروني غير صالح</p>
-              }
-            </div>
+        <div class="space-y-1.5">
+          <label class="block text-slate-700 font-semibold pr-1">البريد الالكتروني</label>
+          <input [(ngModel)]="registerForm().email" #email="ngModel" name="email" required email type="email"
+            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-all"
+            placeholder="example@mail.com" />
+          
+          <div class="text-red-500 text-xs mt-1">
+            @if(email.hasError('required') && email.touched){ <p class="flex items-center gap-1"><span>●</span> البريد الالكتروني مطلوب</p> }
+            @if(email.hasError('email') && email.touched){ <p class="flex items-center gap-1"><span>●</span> البريد الالكتروني غير صالح</p> }
           </div>
+        </div>
 
-          <div class="py-4">
-            <label>كلمة السر</label>
-            <input [(ngModel)]="registerForm().password" placeholder="*********" name="password" #password="ngModel"
-              type="password" required minlength="6" maxlength="100" pattern="^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]+$" />
-            <div class="text-red-500 p-3">
-              @if(password.hasError('required') && password.touched){
-              <p>● كلمة السر مطلوب </p>
-              }
-              @if(password.hasError('minlength') && password.touched){
-              <p>● اقل شيئ 6 حروف</p>
-              }
-              @if(password.errors?.['pattern'] && password.touched){
-              <p>● كلمة السر يجب ان تحتوي علي حرف كبير ورقم عبي الاقل</p>
-              }
-            </div>
+        <div class="space-y-1.5">
+          <label class="block text-slate-700 font-semibold pr-1">كلمة السر</label>
+          <input [(ngModel)]="registerForm().password" name="password" #password="ngModel"
+            type="password" required minlength="6" maxlength="100" pattern="^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]+$"
+            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:bg-white outline-none transition-all"
+            placeholder="*********" />
+          
+          <div class="text-red-500 text-xs mt-1">
+            @if(password.hasError('required') && password.touched){ <p>● كلمة السر مطلوبة</p> }
+            @if(password.hasError('minlength') && password.touched){ <p>● اقل شيئ 6 حروف</p> }
+            @if(password.errors?.['pattern'] && password.touched){ <p>● يجب ان تحتوي على حرف كبير ورقم</p> }
           </div>
+        </div>
 
-          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center  py-4 gap-4">
-            <button [disabled]="form.invalid" type="submit"
-              class="bg-gray-200 text-blue-500 py-3 px-6 rounded-md font-semibold hover:bg-gray-100 hover:text-sky-500">
-              تسجيل
-            </button>
-
-            <a href="#" class="text-sm hover:underline text-center sm:text-right">
+        <div class="flex flex-col gap-4 pt-2">
+          <button [disabled]="form.invalid" type="submit"
+            class="w-full bg-emerald-700 text-white py-3.5 rounded-xl font-bold text-lg shadow-lg shadow-emerald-100 hover:bg-emerald-800 hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50 disabled:transform-none">
+            إنشاء الحساب
+          </button>
+          
+          <div class="flex justify-center text-sm">
+            <a href="#" class="text-slate-400 hover:text-emerald-600 hover:underline transition-colors">
               نسيت كلمة السر ؟
             </a>
           </div>
+        </div>
 
-          <p class=" text-center">
+        <div class="pt-6 border-t border-slate-100 text-center">
+          <p class="text-slate-600">
             لديك حساب بالفعل ؟
-            <a routerLink="/login" class="text-amber-700 font-semibold">
+            <a routerLink="/login" class="text-amber-700 font-bold hover:text-amber-800 mr-1 inline-block hover:scale-105 transition-transform">
               تسجيل الدخول
             </a>
           </p>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </section>
 </div>

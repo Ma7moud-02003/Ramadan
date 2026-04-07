@@ -1,76 +1,106 @@
-<div class="px-4 flex justify-center items-center min-h-screen bg-white text-slate-900">
-  <section
-    class="w-full lg:w-2/3 flex flex-col md:flex-row justify-center items-center p-6 md:p-10 shadow-lg rounded-lg">
-    <!-- Image -->
-    <div class="hidden md:flex md:w-1/2 justify-center">
-      <div>
-        <img src="/17552.jpg" alt="" class="w-3/4 rounded-full" />
-        <p class="text-amber-800 text-lg text-center w-3/4 mx-0 text-center mt-4 leading-relaxed opacity-80">
-          وَإِنَّهُ لَقُرْآنٌ كَرِيمٌ، فِي كِتَابٍ مَّكْنُونٍ
+<div class="min-h-screen bg-slate-50 flex items-center justify-center p-4 sm:p-8  relative overflow-hidden">
+  
+  <div class="absolute top-0 left-0 w-64 h-64 bg-emerald-100 rounded-full blur-3xl opacity-50 -translate-x-1/2 -translate-y-1/2"></div>
+  <div class="absolute bottom-0 right-0 w-96 h-96 bg-amber-100 rounded-full blur-3xl opacity-40 translate-x-1/3 translate-y-1/3"></div>
+
+  <section class="relative w-full max-w-5xl bg-white/80 backdrop-blur-md flex flex-col md:flex-row overflow-hidden rounded-3xl shadow-2xl border border-emerald-100 animate-in fade-in duration-1000">
+    
+    <div class="hidden md:flex md:w-1/2 bg-emerald-900 relative items-center justify-center p-12 overflow-hidden">
+      <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/islamic-art.png')]"></div>
+      
+      <div class="relative z-10 text-center transform transition-all duration-700 hover:scale-105">
+        <div class="relative inline-block">
+            <img src="/17552.jpg" alt="Quran" class="w-64 h-64 object-cover rounded-full border-4 border-amber-400 shadow-2xl mb-8 mx-auto" />
+            <div class="absolute inset-0 rounded-full ring-8 ring-amber-400/20 animate-pulse"></div>
+        </div>
+        
+        <h3 class="font-['Amiri'] text-3xl text-amber-200 leading-loose mb-4">
+          وَإِنَّهُ لَقُرْآنٌ كَرِيمٌ
+        </h3>
+        <p class="text-emerald-100/80 text-lg font-light tracking-wide italic">
+          فِي كِتَابٍ مَّكْنُونٍ
         </p>
-
       </div>
-
     </div>
 
-    <!-- Form -->
-    <div class="w-full md:w-1/2 px-2 md:px-4 register">
-      <div class="py-5 text-center">
-        <p class="">تسجيل دخول</p>
-        <h2 class="font-bold  text-2xl">حسابك</h2>
+    <div class="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-center">
+      
+      <div class="mb-10 text-center md:text-right">
+        <span class="text-emerald-600 font-medium tracking-widest uppercase text-xs">أهلاً بك مجدداً</span>
+        <h2 class="text-4xl font-bold text-slate-800 mt-2">تسجيل <span class="text-emerald-700">الدخول</span></h2>
+        <div class="h-1 w-12 bg-amber-400 mt-4 mx-auto md:mr-0 md:ml-auto rounded-full"></div>
       </div>
 
-      <div class="form">
-        <form class="block" #form="ngForm" (submit)="login($event)">
-          <div class="py-4">
-            <label>البريد الالكتروني</label>
-            <input [(ngModel)]="user().email" #email="ngModel" type="email" name="email" required email
-              minlength="10" />
-            <div class="text-red-500 p-3">
-              @if(email.hasError('required') && email.touched){
-              <p>● البريد الالكتروني مطلوب</p>
-              }
-              @if(email.hasError('email') && email.touched){
-              <p>● البريد الالكتروني غير صالح</p>
-              }
+      <form class="space-y-6" #form="ngForm" (submit)="login($event)">
+        
+        <div class="group">
+          <label class="block text-slate-700 font-semibold mb-2 pr-1 transition-colors group-focus-within:text-emerald-600">
+            البريد الإلكتروني
+          </label>
+          <div class="relative">
+            <input 
+              [(ngModel)]="user().email" 
+              #email="ngModel" 
+              type="email" 
+              name="email" 
+              required 
+              email
+              minlength="10"
+              placeholder="example@mail.com"
+              class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all duration-300"
+            />
+          </div>
+          
+          <div class="overflow-hidden transition-all duration-300" [class.h-0]="!(email.invalid && email.touched)">
+            <div class="text-red-500 text-sm mt-2 flex items-center gap-1">
+              <span *ngIf="email.hasError('required')">● البريد الالكتروني مطلوب</span>
+              <span *ngIf="email.hasError('email')">● البريد الالكتروني غير صالح</span>
             </div>
           </div>
+        </div>
 
-          <div class="py-4">
-            <label>كلمة السر</label>
-            <input [(ngModel)]="user().password" #password="ngModel" name="password" placeholder="************"
-              type="password" required minlength="6" maxlength="100" pattern="^(?=.*[A-Z])(?=.*\d).+$" />
-            <div class="text-red-500 p-3">
-              @if(password.hasError('required') && password.touched){
-              <p>● كلمة السر مطلوب </p>
-              }
-              @if(password.hasError('minlength') && password.touched){
-              <p>● اقل شيئ 6 حروف</p>
-              }
-              @if(password.errors?.['pattern'] && password.touched){
-              <p>● كلمة السر يجب ان تحتوي علي حرف كبير ورقم عبي الاقل</p>
-              }
-            </div>
+        <div class="group">
+          <div class="flex justify-between items-center mb-2 pr-1">
+            <label class="text-slate-700 font-semibold transition-colors group-focus-within:text-emerald-600">
+              كلمة السر
+            </label>
+            <a href="#" class="text-xs text-emerald-600 hover:text-emerald-700 hover:underline transition-all">نسيت كلمة السر؟</a>
           </div>
-
-          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center  py-4 gap-4">
-            <button [disabled]="form.invalid" type="submit"
-              class="bg-gray-200 text-blue-500 py-3 px-6 rounded-md font-semibold hover:bg-gray-100 hover:text-sky-500">
-              Login
-            </button>
-            <a href="#" class="text-sm hover:underline">
-              نسيت كلمة السر ؟
-            </a>
+          <input 
+            [(ngModel)]="user().password" 
+            #password="ngModel" 
+            name="password" 
+            placeholder="************"
+            type="password" 
+            required 
+            minlength="6" 
+            maxlength="100" 
+            pattern="^(?=.*[A-Z])(?=.*\d).+$"
+            class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all duration-300"
+          />
+          
+          <div class="text-red-500 text-sm mt-2 space-y-1">
+            <p *ngIf="password.hasError('required') && password.touched">● كلمة السر مطلوبة</p>
+            <p *ngIf="password.hasError('minlength') && password.touched">● أقل طول هو 6 حروف</p>
+            <p *ngIf="password.errors?.['pattern'] && password.touched">● يجب احتواء كلمة السر على حرف كبير ورقم</p>
           </div>
+        </div>
 
-          <p class=" text-center">
-            ليس لديك حساب ؟
-            <a routerLink="/register" class="text-amber-400 font-semibold">
-              تسجيل
-            </a>
-          </p>
-        </form>
-      </div>
+        <button 
+          [disabled]="form.invalid" 
+          type="submit"
+          class="w-full py-4 bg-emerald-700 text-white rounded-xl font-bold text-lg shadow-lg shadow-emerald-200 hover:bg-emerald-800 hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        >
+          دخول للمنصة
+        </button>
+
+        <p class="text-center text-slate-500 pt-4">
+          ليس لديك حساب؟
+          <a routerLink="/register" class="text-amber-600 font-bold hover:text-amber-700 transition-colors mr-1">
+            إنشاء حساب جديد
+          </a>
+        </p>
+      </form>
     </div>
   </section>
 </div>

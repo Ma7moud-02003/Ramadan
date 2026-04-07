@@ -95,6 +95,31 @@ export class Home implements OnInit, OnDestroy {
     );
   }
 
+  getShowTafseer()
+  {
+    this.showTafseer.set(!this.showTafseer());
+    if(this.showTafseer())
+    {
+   setTimeout(() => {
+    
+window.scrollBy({
+  top: 300,
+  behavior: 'smooth'
+});
+   }, 100);}
+   else
+{
+   setTimeout(() => {
+    
+window.scrollBy({
+  top: -300,
+  behavior: 'smooth'
+});
+   }, 100);
+
+   }
+  }
+
   getCurrentSurah(cSurah: number) {
     this.subs.add(
       this.home.getCurrentSurah(cSurah).subscribe((res) => {
